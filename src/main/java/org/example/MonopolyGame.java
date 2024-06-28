@@ -9,20 +9,35 @@ import java.util.ArrayList;
 
 public class MonopolyGame {
     private final int totalRound;
+    private final int maximumPlayer;
     private int roundCount;
     private final Die[] dice;
     private final Board board;
     private final ArrayList<Player> players;
 
-    public MonopolyGame(int totalRound, int totalSquares, String[] playerNames) throws InvalidNumberOfPlayers {
+    public MonopolyGame(int totalRound, int totalSquares, int maximumPlayer) {
         this.totalRound = totalRound;
+        this.maximumPlayer = maximumPlayer;
         players = new ArrayList<>();
         roundCount = 0;
         board = new Board(totalSquares);
         dice = new Die[]{ new Die(), new Die() };
+    }
 
-        if (playerNames.length < 2 || playerNames.length > 8) {
-            throw new InvalidNumberOfPlayers("Invalid number of players: " + playerNames.length);
+    public void addPlayer(String playerName) throws InvalidNumberOfPlayers {
+        if (players.size() == maximumPlayer) {
+            throw new InvalidNumberOfPlayers("Maximum player exceeded");
+        }
+        Player newPlayer = new Player(playerName);
+        newPlayer.setBoard(board);
+        newPlayer.setDice(dice);
+        newPlayer.initializePiece();
+        players.add(newPlayer);
+    }
+
+    public void addPlayerByArray(String[] playerNames) throws InvalidNumberOfPlayers {
+        if (players.size() == maximumPlayer) {
+            throw new InvalidNumberOfPlayers("Maximum player exceeded");
         }
         for (String name : playerNames) {
             Player newPlayer = new Player(name);
@@ -33,7 +48,10 @@ public class MonopolyGame {
         }
     }
 
-    public void playGame() {
+    public void playGame() throws InvalidNumberOfPlayers {
+        if (players.size() < 2) {
+            throw new InvalidNumberOfPlayers("Need at least 2 players");
+        }
         while (roundCount < totalRound) {
             playRound();
             roundCount++;
