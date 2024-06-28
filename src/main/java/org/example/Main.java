@@ -6,14 +6,10 @@
 package org.example;
 
 public class Main {
-    public static void main(String[] args) {
-        Player[] players = {
-                new Player("A"),
-                new Player("B")
-        };
-
+    public static void main(String[] args) throws InvalidNumberOfPlayers {
+        String[] playerNames = { "A", "B" };
         MonopolyGame newGame = new MonopolyGame(
-                50, 40, players
+                50, 40, playerNames
         );
         newGame.playGame();
     }
